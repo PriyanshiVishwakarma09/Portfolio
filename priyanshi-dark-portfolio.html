@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Priyanshi Vishwakarma | Android Developer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+           
+            --primary: #3DDC84;      
+            --primary-dark: #00A35C;
+            --navy: #073042;        
+            --bg: #ffffff;
+            --bg-alt: #F5F8FA;
+            --text-main: #1F1F1F;
+            --text-light: #5F6368;
+            --border: #E0E0E0;
+            --shadow-card: 0 4px 12px rgba(0,0,0,0.05);
+            --shadow-float: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* --- BACKGROUND GRID --- */
+        .grid-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(var(--text-light) 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.05;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 15px 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .nav-container {
+            max-width: 1200px; margin: 0 auto; padding: 0 24px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 800;
+            font-size: 20px;
+            color: var(--navy);
+            letter-spacing: -0.5px;
+        }
+        .logo span { color: var(--primary-dark); }
+
+        .nav-links { display: flex; gap: 30px; list-style: none; }
+        .nav-links a {
+            text-decoration: none; color: var(--text-light);
+            font-weight: 500; transition: 0.3s;
+            position: relative; font-size: 14px;
+        }
+        .nav-links a:hover { color: var(--navy); }
+        
+        /* --- HERO SECTION --- */
+        .hero {
+            min-height: 100vh;
+            display: flex; align-items: center;
+            padding-top: 60px;
+        }
+
+        .container {
+            max-width: 1200px; margin: 0 auto; padding: 0 24px;
+            width: 100%;
+            display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px;
+            align-items: center;
+        }
+
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: #E8F5E9; color: var(--primary-dark);
+            padding: 6px 14px; border-radius: 50px;
+            font-size: 13px; font-weight: 600;
+            margin-bottom: 24px; letter-spacing: 0.5px;
+        }
+        .dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; animation: pulse 2s infinite; }
+
+        .hero h1 {
+            font-size: clamp(42px, 5vw, 64px);
+            line-height: 1.1; font-weight: 800;
+            color: var(--navy); margin-bottom: 20px;
+        }
+
+        /* TYPING ANIMATION STYLES */
+        .typing-text { color: var(--primary-dark); }
+        .cursor { 
+            display: inline-block; 
+            width: 3px; background: var(--text-main); 
+            animation: blink 1s infinite; 
+            margin-left: 5px;
+        }
+
+        .hero p {
+            font-size: 18px; color: var(--text-light);
+            margin-bottom: 30px; max-width: 500px; line-height: 1.6;
+        }
+
+        .btn {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 14px 28px; border-radius: 12px;
+            text-decoration: none; font-weight: 600; transition: 0.3s;
+        }
+        .btn-primary {
+            background: var(--navy); color: white;
+            box-shadow: 0 8px 20px rgba(7, 48, 66, 0.2);
+        }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba(7, 48, 66, 0.3); }
+
+        /* --- 3D PHONE ANIMATION --- */
+        .hero-visual {
+            display: flex; justify-content: center;
+            perspective: 1000px;
+        }
+
+        .phone-mockup {
+            width: 280px; height: 580px;
+            background: #111;
+            border-radius: 40px;
+            border: 10px solid #1f1f1f;
+            position: relative;
+            transform: rotateY(-15deg) rotateX(5deg);
+            box-shadow: -20px 20px 60px rgba(0,0,0,0.15);
+            animation: floatPhone 6s ease-in-out infinite;
+            overflow: hidden;
+        }
+
+        .phone-notch {
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 100px; height: 25px; background: #1f1f1f;
+            border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;
+            z-index: 10;
+        }
+
+        .phone-screen {
+            width: 100%; height: 100%;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Screen Content Animation */
+        .app-header {
+            height: 70px; background: var(--navy);
+            display: flex; align-items: flex-end; padding: 15px;
+            color: white; font-weight: bold; font-size: 16px;
+        }
+        
+        .app-content {
+            padding: 15px;
+            animation: scrollScreen 10s linear infinite;
+        }
+
+        .app-card {
+            background: var(--bg-alt); height: 80px; border-radius: 12px;
+            margin-bottom: 12px; display: flex; align-items: center; padding: 10px; gap: 10px;
+        }
+        .app-icon { width: 40px; height: 40px; background: white; border-radius: 8px; }
+        .app-lines { flex: 1; }
+        .line { height: 6px; background: #ddd; border-radius: 4px; margin-bottom: 6px; width: 80%; }
+        .line.short { width: 50%; }
+
+        @keyframes floatPhone {
+            0%, 100% { transform: rotateY(-15deg) rotateX(5deg) translateY(0); }
+            50% { transform: rotateY(-10deg) rotateX(2deg) translateY(-20px); }
+        }
+        @keyframes scrollScreen {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-200px); }
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
+        /* --- GLOBAL SECTION STYLES --- */
+        .section { padding: 100px 0; }
+        .section-header { margin-bottom: 60px; }
+        .section-tag { 
+            color: var(--primary-dark); font-weight: 700; 
+            text-transform: uppercase; letter-spacing: 1.5px; font-size: 13px;
+            display: block; margin-bottom: 10px;
+        }
+        .section-title { font-size: 36px; color: var(--navy); font-weight: 800; }
+
+        /* --- PROJECTS GRID (UPDATED LINK STYLES) --- */
+        .projects-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px;
+        }
+
+        /* Make the project card an Anchor tag */
+        a.project-card {
+            display: block; /* Important for anchor to behave like a card */
+            text-decoration: none; /* Remove underline */
+            color: inherit; /* Inherit text colors */
+            background: white; border-radius: 20px;
+            padding: 35px; border: 1px solid var(--border);
+            transition: 0.3s ease; position: relative; overflow: hidden;
+            box-shadow: var(--shadow-card);
+        }
+        
+        a.project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-float);
+            border-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .project-icon { font-size: 32px; margin-bottom: 15px; }
+        .project-title { font-size: 22px; font-weight: 700; margin-bottom: 10px; color: var(--navy); }
+        .project-desc { color: var(--text-light); line-height: 1.6; margin-bottom: 20px; font-size: 15px; }
+        
+        .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; }
+        .tag {
+            background: var(--bg-alt); color: var(--navy);
+            padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* --- SKILLS SECTION --- */
+        .skills-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px;
+        }
+        .skill-card {
+            background: white; border: 1px solid var(--border);
+            padding: 30px; border-radius: 16px; transition: 0.3s;
+        }
+        .skill-card:hover { border-color: var(--primary); box-shadow: var(--shadow-card); }
+        .skill-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; color: var(--navy); font-weight: 700; font-size: 18px; }
+        .skill-list { list-style: none; }
+        .skill-list li {
+            margin-bottom: 10px; color: var(--text-light); font-size: 15px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .skill-list li::before {
+            content: ''; width: 6px; height: 6px; background: var(--primary); border-radius: 50%;
+        }
+
+        /* --- ACHIEVEMENTS & EXPERIENCE --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .reveal-card {
+            animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            opacity: 0; 
+        }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.6s; }
+
+        .achievements-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+            gap: 30px; 
+        }
+        .stat-card {
+            background: var(--bg-alt); padding: 45px 30px; border-radius: 20px;
+            text-align: center; transition: all 0.4s; border: 1px solid transparent;
+        }
+        .stat-card:hover { 
+            background: #E8F5E9; transform: translateY(-10px); 
+            box-shadow: var(--shadow-float); border-color: var(--primary);
+        }
+        .stat-num { font-size: 48px; font-weight: 800; color: var(--navy); margin-bottom: 10px; }
+        .stat-label { font-size: 14px; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 1.5px; }
+
+        .experience-section-wrapper { margin-top: 100px; }
+        .experience-card {
+            background: white; border: 1px solid var(--border);
+            border-left: 6px solid var(--primary); padding: 50px; border-radius: 24px;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 30px; box-shadow: var(--shadow-card); transition: 0.4s ease;
+        }
+        .experience-card:hover { transform: translateY(-5px) scale(1.01); box-shadow: var(--shadow-float); }
+        .exp-role { font-size: 24px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+        .exp-org { color: var(--text-light); font-size: 18px; font-weight: 500; }
+        .exp-desc { margin-top: 15px; color: var(--text-light); max-width: 650px; font-size: 16px; line-height: 1.7; }
+        .exp-date { 
+            background: var(--navy); color: white; padding: 12px 24px; 
+            border-radius: 50px; font-size: 14px; font-weight: 700; 
+        }
+
+        /* --- CONTACT SECTION --- */
+        .contact-container {
+            background: var(--navy); border-radius: 24px; padding: 60px;
+            text-align: center; color: white; position: relative; overflow: hidden;
+            box-shadow: var(--shadow-float);
+        }
+        .droid-bg {
+            position: absolute; right: -40px; bottom: -40px;
+            opacity: 0.08; width: 250px; fill: white; pointer-events: none;
+        }
+        .contact-title { font-size: 32px; margin-bottom: 15px; color: white; }
+        .contact-text { opacity: 0.8; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto; color: #E0E0E0; }
+        .contact-links { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        .contact-btn {
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+            color: white; padding: 12px 24px; border-radius: 10px; text-decoration: none; font-weight: 600;
+            display: flex; align-items: center; gap: 8px; transition: 0.3s;
+        }
+        .contact-btn:hover { background: var(--primary); color: var(--navy); border-color: var(--primary); }
+
+        /* --- FOOTER --- */
+        footer {
+            padding: 40px 0; text-align: center; color: var(--text-light);
+            border-top: 1px solid var(--border); margin-top: 80px; font-size: 14px;
+        }
+
+        @media (max-width: 900px) {
+            .container { grid-template-columns: 1fr; text-align: center; }
+            .hero-visual { margin-top: 40px; }
+            .nav-links { display: none; }
+            .logo { flex-grow: 1; text-align: center; }
+            .experience-card { flex-direction: column; text-align: center; padding: 30px; }
+            .stat-num { font-size: 36px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="grid-bg"></div>
+
+    <nav>
+        <div class="nav-container">
+            <div class="logo">Priyanshi<span>.kt</span></div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#achievements">Stats</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-text">
+                <div class="hero-badge">
+                    <div class="dot"></div>
+                    Available for new projects
+                </div>
+                <h1>Hi, I'm Priyanshi.<br>
+                    <span class="typing-text">Android Developer</span><span class="cursor">|</span>
+                </h1>
+                <p>
+                    B.Tech CS student crafting scalable Android apps with <strong>Kotlin</strong> and <strong>Jetpack Compose</strong>. 
+                    Merging clean code with modern "Material You" design.
+                </p>
+                <a href="#projects" class="btn btn-primary">
+                    View Portfolio
+                </a>
+            </div>
+
+            <div class="hero-visual">
+                <div class="phone-mockup">
+                    <div class="phone-notch"></div>
+                    <div class="phone-screen">
+                        <div class="app-header">My Skills</div>
+                        <div class="app-content">
+                            <div class="app-card"><div class="app-icon" style="background:#3DDC84"></div><div class="app-lines"><div class="line" style="background:#3DDC84"></div><div class="line short"></div></div></div>
+                            <div class="app-card"><div class="app-icon" style="background:#4285F4"></div><div class="app-lines"><div class="line" style="background:#4285F4"></div><div class="line short"></div></div></div>
+                            <div class="app-card"><div class="app-icon" style="background:#073042"></div><div class="app-lines"><div class="line" style="background:#073042"></div><div class="line short"></div></div></div>
+                            <div class="app-card"><div class="app-icon" style="background:#eee"></div><div class="app-lines"><div class="line"></div><div class="line short"></div></div></div>
+                            <div class="app-card"><div class="app-icon" style="background:#eee"></div><div class="app-lines"><div class="line"></div><div class="line short"></div></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="section">
+        <div class="container" style="display: block;">
+            <div class="section-header">
+                <span class="section-tag">Portfolio</span>
+                <h2 class="section-title">Featured Work</h2>
+            </div>
+            
+            <div class="projects-grid">
+                <a href="https://github.com/PriyanshiVishwakarma09/CityPulse" target="_blank" class="project-card">
+                    <div class="project-icon">🏙️</div>
+                    <h3 class="project-title">CityPulse</h3>
+                    <p class="project-desc">Smart civic reporting platform enabling real-time issue resolution. Features live location tracking and admin dashboards.</p>
+                    <div class="tags"><span class="tag">Kotlin</span><span class="tag">Compose</span><span class="tag">Hilt</span></div>
+                </a>
+
+                <a href="https://github.com/PriyanshiVishwakarma09/LifeSaver" target="_blank" class="project-card">
+                    <div class="project-icon">🚑</div>
+                    <h3 class="project-title">LifeSaver</h3>
+                    <p class="project-desc">Emergency SOS application with voice-triggered alerts and background location services for 99.9% reliability.</p>
+                    <div class="tags"><span class="tag">Services</span><span class="tag">Voice AI</span><span class="tag">Maps</span></div>
+                </a>
+
+                <a href="https://github.com/PriyanshiVishwakarma09/TrackEase" target="_blank" class="project-card">
+                    <div class="project-icon">📅</div>
+                    <h3 class="project-title">TrackEase</h3>
+                    <p class="project-desc">Offline-first habit tracking application using Room Database and MVVM architecture for seamless performance.</p>
+                    <div class="tags"><span class="tag">Room DB</span><span class="tag">Coroutines</span><span class="tag">MVVM</span></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="section" style="background: var(--bg-alt);">
+        <div class="container" style="display: block;">
+            <div class="section-header">
+                <span class="section-tag">Expertise</span>
+                <h2 class="section-title">Technical Skills</h2>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-header">📱 Mobile Dev</div>
+                    <ul class="skill-list">
+                        <li>Android SDK & Jetpack</li>
+                        <li>Kotlin & KMP</li>
+                        <li>Jetpack Compose</li>
+                        <li>MVVM Architecture</li>
+                    </ul>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-header">⚙️ Backend</div>
+                    <ul class="skill-list">
+                        <li>Java & Spring Boot</li>
+                        <li>Spring Security</li>
+                        <li>RESTful APIs</li>
+                        <li>Microservices (Basics)</li>
+                    </ul>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-header">💾 Database</div>
+                    <ul class="skill-list">
+                        <li>Firebase (Realtime)</li>
+                        <li>PostgreSQL</li>
+                        <li>MySQL & SQLite</li>
+                        <li>Room Database</li>
+                    </ul>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-header">🛠️ Tools</div>
+                    <ul class="skill-list">
+                        <li>Git & GitHub</li>
+                        <li>Android Studio</li>
+                        <li>Docker & AWS</li>
+                        <li>Postman</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="achievements" class="section">
+        <div class="container" style="display: block;">
+            
+            <div class="section-header">
+                <span class="section-tag">Competitive</span>
+                <h2 class="section-title">Achievements</h2>
+            </div>
+            <div class="achievements-grid">
+                <div class="stat-card reveal-card delay-1">
+                    <div class="stat-num">1592</div>
+                    <div class="stat-label">LeetCode Rating</div>
+                </div>
+                <div class="stat-card reveal-card delay-2">
+                    <div class="stat-num">1311</div>
+                    <div class="stat-label">CodeChef Rating</div>
+                </div>
+                <div class="stat-card reveal-card delay-3">
+                    <div class="stat-num">1028</div>
+                    <div class="stat-label">Codeforces</div>
+                </div>
+                <div class="stat-card reveal-card delay-4">
+                    <div class="stat-num">500+</div>
+                    <div class="stat-label">Problems Solved</div>
+                </div>
+            </div>
+
+            <div class="experience-section-wrapper">
+                <div class="section-header">
+                    <span class="section-tag">Leadership</span>
+                    <h2 class="section-title">Experience</h2>
+                </div>
+                
+                <div class="experience-card reveal-card delay-5">
+                    <div>
+                        <div class="exp-role">Android Development Coordinator</div>
+                        <div class="exp-org">CP BYTE Club, KIET</div>
+                        <p class="exp-desc">
+                            Leading Android development initiatives, mentoring peers on Kotlin/Compose, 
+                            and organizing technical workshops for students. Built 3 major club apps used by 1000+ students.
+                        </p>
+                    </div>
+                    <div class="exp-date">Sept 2024 – Present</div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="contact" class="section">
+        <div class="container" style="display: block;">
+            <div class="contact-container">
+                <svg class="droid-bg" viewBox="0 0 24 24">
+                    <path d="M17.523 15.3414C17.523 15.3414 17.5605 15.3414 17.5982 15.3414C17.7857 15.3414 17.9357 15.4914 17.9357 15.6789V19.4289C17.9357 19.6164 17.7857 19.7664 17.5982 19.7664C17.5607 19.7664 17.5232 19.7664 17.5232 19.7664C16.6607 19.8039 16.0982 20.2164 16.0982 21.0789V21.8289C16.0982 22.2414 15.7607 22.5789 15.3482 22.5789H14.5982C14.1857 22.5789 13.8482 22.2414 13.8482 21.8289V20.8914C13.8482 20.3289 13.3982 19.8789 12.8357 19.8789H11.1482C10.5857 19.8789 10.1357 20.3289 10.1357 20.8914V21.8289C10.1357 22.2414 9.79824 22.5789 9.38574 22.5789H8.63574C8.22324 22.5789 7.88574 22.2414 7.88574 21.8289V21.0789C7.88574 20.2164 7.32324 19.8039 6.46074 19.7664C6.46074 19.7664 6.42324 19.7664 6.38574 19.7664C6.19824 19.7664 6.04824 19.6164 6.04824 19.4289V15.6789C6.04824 15.4914 6.19824 15.3414 6.38574 15.3414C6.42324 15.3414 6.46074 15.3414 6.46074 15.3414C7.32324 15.3039 7.88574 14.8914 7.88574 14.0289V12.5289C7.88574 11.1414 9.01074 10.0164 10.3982 10.0164H13.5857C14.9732 10.0164 16.0982 11.1414 16.0982 12.5289V14.0289C16.0982 14.8914 16.6607 15.3039 17.523 15.3414Z"/>
+                </svg>
+                
+                <h2 class="contact-title">Let's Build Something Great</h2>
+                <p class="contact-text">Always excited to discuss Android development, Kotlin Multiplatform, or collaborative opportunities.</p>
+                
+                <div class="contact-links">
+                    <a href="mailto:vishwakarmapriyanshi68@gmail.com" class="contact-btn">📧 Email Me</a>
+                    <a href="tel:+918273935039" class="contact-btn">📱 Call Me</a>
+                    <a href="https://github.com/PriyanshiVishwakarma09" target="_blank" class="contact-btn">💻 GitHub</a>
+                    <a href="https://linkedin.com" target="_blank" class="contact-btn">💼 LinkedIn</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Priyanshi Vishwakarma. Built with 💚 and Code.</p>
+    </footer>
+
+    <script>
+        const textElement = document.querySelector('.typing-text');
+        const phrases = ["Android Developer", "Kotlin Enthusiast", "UI/UX Designer"];
+        let phraseIndex = 0, charIndex = 0, isDeleting = false;
+
+        function type() {
+            const currentPhrase = phrases[phraseIndex];
+            if (isDeleting) {
+                textElement.textContent = currentPhrase.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                textElement.textContent = currentPhrase.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 100 : 150;
+            if (!isDeleting && charIndex === currentPhrase.length) {
+                isDeleting = true; typeSpeed = 2000;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false; phraseIndex = (phraseIndex + 1) % phrases.length; typeSpeed = 500;
+            }
+            setTimeout(type, typeSpeed);
+        }
+        document.addEventListener('DOMContentLoaded', type);
+    </script>
+</body>
+</html>
